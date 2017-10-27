@@ -291,8 +291,12 @@ var _class = function (_Phaser$State) {
     key: 'preload',
     value: function preload() {
       game.load.image('pipe', 'assets/images/pipe.png');
-      game.load.image('bird', 'assets/images/bird.png');
+      game.load.image('bird', 'assets/images/angel_pixly.gif');
       game.load.image('background', 'assets/images/background.png');
+      game.load.audio('flojt', 'assets/videoplayback.mp3');
+      game.load.audio('hehe', 'assets/Smirk+1.mp3');
+      game.load.audio('hoho', 'assets/Smirk+2.mp3');
+      game.load.audio('applause', 'assets/applause3.mp3');
     }
   }, {
     key: 'create',
@@ -312,43 +316,48 @@ var _class = function (_Phaser$State) {
       this.timer = game.time.events.loop(3000, this.addRowOfPipes, this);
       this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
       this.spaceKey.onDown.add(this.jump, this);
-      this.blowValue = 0;
+
+      this.music = this.game.add.audio('flojt');
+      this.music.play();
+      this.soundHehe = this.game.add.audio('hehe');
+      this.soundHoho = this.game.add.audio('hoho');
+      this.soundApplause = this.game.add.audio('applause');
+      this.soundHoho.play();
+      this.soundHehe.play();
     }
   }, {
     key: 'update',
     value: function update() {
       var pressureReturn = returnValue();
-      console.log(pressureReturn);
-      // if (pressureReturn != null) {
-      //   let splitStuff = pressureReturn.split(",")
-      //   if (splitStuff[0] != null && splitStuff[1] != null) {
-      //     let blowValue = splitStuff[0].replace('hej: ', "");
-      //     let btnValue = splitStuff[1].replace('Button: ', "");
-      //     if (btnValue == 1) {
-      //       this.bird.y += 20
-      //     }
-      //     if (btnValue == -1) {
-      //       this.bird.y -= 20
-      //     }
-      //     if (blowValue > 30) {
-      //       console.log("hello");
-      //       this.bird.x += 10
-      //     } else {
-      //       this.bird.x -= 2
-      //     }
-      // if (pressureReturn != null) {
-      //   this.bird.x -= 1
-      //   if(pressureReturn > 50) {
-      //     if (this.bird.x > 300) {
-      //
-      //     } else {
-      //       this.bird.x += 5
-      //     }
-      //     console.log("hej");
-      //   }
-      // }
-      // let pressure = pressureReturn.replace( /^\D+/g, '');
-      // }
+      if (pressureReturn != null) {
+        var splitStuff = pressureReturn.split(",");
+        if (splitStuff[0] != null && splitStuff[1] != null) {
+          var blowValue = splitStuff[0].replace('hej: ', "");
+          var btnValue = splitStuff[1].replace('Button: ', "");
+          if (btnValue == 1) {
+            // this.bird.y += 20
+            this.jump();
+          }
+          if (btnValue == -1) {
+            this.bird.y -= 20;
+          }
+          if (blowValue > 30) {
+            console.log("hello");
+            this.bird.x += 10;
+          } else {
+            this.bird.x -= 2;
+          }
+          if (pressureReturn != null) {
+            this.bird.x -= 1;
+            if (pressureReturn > 50) {
+              if (this.bird.x > 300) {} else {
+                this.bird.x += 5;
+              }
+              console.log("hej");
+            }
+          }
+        }
+      }
       this.score += 1;
       this.labelScore.text = this.score;
       game.physics.arcade.overlap(this.bird, this.pipes, this.hitPipe, null, this);
@@ -404,6 +413,7 @@ var _class = function (_Phaser$State) {
         p.body.velocity.x = 0;
       }, this);
       game.paused = true;
+      this.soundApplause.play();
     }
   }, {
     key: 'goUp',
